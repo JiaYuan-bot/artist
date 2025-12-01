@@ -1,6 +1,6 @@
 # ARTIST: An Agentic Data System With A Learned Optimizer
 
-This repository contains the official implementation and prompts for our VLDB 2026 paper:
+This repository contains the official implementation and prompts for our VLDB 2026 submission:
 
 > **ARTIST: An Agentic Data System With A Learned Optimizer**  
 > Jia Yuan, Chuan Lei, Tim Kraska, Samuel Madden, Lei Cao  
