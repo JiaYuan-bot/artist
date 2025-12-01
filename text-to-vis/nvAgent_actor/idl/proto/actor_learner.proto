@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package actor_learner;
+
+// Service definition
+service LearnerService {
+    rpc RegisterActor(RegisterActorRequest) returns (RegisterActorResponse);
+    rpc SendExperiences(SendExperiencesRequest) returns (SendExperiencesResponse);
+    rpc GetModelWeights(GetModelWeightsRequest) returns (GetModelWeightsResponse);
+}
+
+// Experience message definition
+message Experience {
+    string state_graph_part = 1;  // JSON serialized state
+    string task_question = 2;
+    string action = 3;
+    float reward = 4;
+    string next_state_graph_part = 5;  // JSON serialized next state
+    bool done = 6;
+    repeated string available_actions = 7;
+    repeated string next_available_actions = 8;
+}
+
+// Request/Response messages
+message RegisterActorRequest {
+    int32 actor_id = 1;
+    map<string, string> metadata = 2;
+    double timestamp = 3;
+}
+
+message RegisterActorResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message SendExperiencesRequest {
+    int32 actor_id = 1;
+    repeated Experience experiences = 2;
+    double timestamp = 3;
+}
+
+message SendExperiencesResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetModelWeightsRequest {
+    int32 actor_id = 1;
+    double timestamp = 2;
+}
+
+message GetModelWeightsResponse {
+    bool has_update = 1;
+    bytes model_weights = 2;  // Serialized model weights
+    double timestamp = 3;
+}

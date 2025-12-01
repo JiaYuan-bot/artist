@@ -1,0 +1,52 @@
+import sklearn  # Add this line at the very top
+import torch.cuda
+import logging
+import asyncio
+
+from workflow_controller.workflow_executor import WorkflowExecutor, FunctionServiceClient
+# from rl_distributed.learner import run_learner
+from rl_distributed.learner_with_p_buffer import run_learner
+# from rl_distributed.learner_without_PLM import run_learner
+from rl_distributed.experience_collector import start_collector_server
+
+if __name__ == "__main__":
+    # Setup
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    torch.autograd.set_detect_anomaly(True)
+    # Example usage
+    from workflow_controller.graph import create_example_nvagent_workflow_default
+
+    # Create workflow and dataset
+    graph = create_example_nvagent_workflow_default()
+    run_learner(workflow_graph=graph, device='cuda')
+
+# if __name__ == "__main__":
+#     import argparse
+
+#     parser = argparse.ArgumentParser(
+#         description='Simple Experience Collector Learner')
+#     parser.add_argument('--port', type=int, default=50201, help='Server port')
+#     parser.add_argument('--buffer-capacity',
+#                         type=int,
+#                         default=50000000,
+#                         help='Maximum buffer capacity')
+#     parser.add_argument(
+#         '--buffer-save-path',
+#         type=str,
+#         default=
+#         '/home/jiayuan/nl2sql/chess_service_learner/train_result/stage1/experience_dev_stage1.pkl',
+#         help='Path to save/load buffer')
+#     parser.add_argument('--max-workers',
+#                         type=int,
+#                         default=1000,
+#                         help='Maximum concurrent RPC workers')
+
+#     args = parser.parse_args()
+
+#     start_collector_server(port=args.port,
+#                            buffer_capacity=args.buffer_capacity,
+#                            buffer_save_path=args.buffer_save_path,
+#                            max_workers=args.max_workers)

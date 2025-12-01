@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+
+service FunctionService {
+  rpc preprocess(PreprocessReq) returns (PreprocessReply);
+  rpc processor(ProcessorReq) returns (ProcessorReply);
+  rpc composer(ComposerReq) returns (ComposerReply);
+  rpc translator(TranslatorReq) returns (TranslatorReply);
+  rpc validator(ValidatorReq) returns (ValidatorReply);
+  rpc nv_evaluation(NvEvaluationReq) returns (NvEvaluationReply);
+}
+
+message PreprocessReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message PreprocessReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message ProcessorReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ProcessorReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ComposerReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ComposerReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message TranslatorReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message TranslatorReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ValidatorReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ValidatorReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message NvEvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message NvEvaluationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+
+

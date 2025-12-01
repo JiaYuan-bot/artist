@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+
+service FunctionService {
+  rpc candidate_generation(CandidateGenerationReq) returns (CandidateGenerationReply);
+  rpc column_filtering(ColumnFilteringReq) returns (ColumnFilteringReply);
+  rpc column_selection(ColumnSelectionReq) returns (ColumnSelectionReply);
+  rpc context_retrieval(ContextRetrievalReq) returns (ContextRetrievalReply);
+  rpc entity_retrieval(EntityRetrievalReq) returns (EntityRetrievalReply);
+  rpc evaluation(EvaluationReq) returns (EvaluationReply);
+  rpc keyword_extraction(KeywordExtractionReq) returns (KeywordExtractionReply);
+  rpc revision(RevisionReq) returns (RevisionReply);
+  rpc table_selection(TableSelectionReq) returns (TableSelectionReply);
+
+  rpc preprocess(PreprocessReq) returns (PreprocessReply);
+  rpc processor(ProcessorReq) returns (ProcessorReply);
+  rpc composer(ComposerReq) returns (ComposerReply);
+  rpc validator(ValidatorReq) returns (ValidatorReply);
+  rpc nv_evaluation(NvEvaluationReq) returns (NvEvaluationReply);
+
+  rpc question_to_query(QuestionToQueryReq) returns (QuestionToQueryReply);
+  rpc context_question_to_query(ContextQuestionToQueryReq) returns (ContextQuestionToQueryReply);
+  rpc context_question_to_answer(ContextQuestionToAnswerReq) returns (ContextQuestionToAnswerReply);
+  rpc rerank(RerankReq) returns (RerankReply);
+  rpc retrieval1(Retrieval1Req) returns (Retrieval1Reply);
+  rpc retrieval2(Retrieval2Req) returns (Retrieval2Reply);
+  rpc qa_evaluation(QaEvaluationReq) returns (QaEvaluationReply);
+}
+
+message CandidateGenerationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message CandidateGenerationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ColumnFilteringReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ColumnFilteringReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ColumnSelectionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ColumnSelectionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ContextRetrievalReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ContextRetrievalReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message EntityRetrievalReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message EntityRetrievalReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message EvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message EvaluationReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message KeywordExtractionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message KeywordExtractionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message RevisionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message RevisionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message TableSelectionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message TableSelectionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message PreprocessReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message PreprocessReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message ProcessorReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ProcessorReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ComposerReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ComposerReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ValidatorReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ValidatorReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message NvEvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message NvEvaluationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message QuestionToQueryReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message QuestionToQueryReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message Retrieval1Req {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message Retrieval1Reply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message Retrieval2Req {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message Retrieval2Reply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message ContextQuestionToQueryReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ContextQuestionToQueryReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ContextQuestionToAnswerReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ContextQuestionToAnswerReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message RerankReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message RerankReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message QaEvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message QaEvaluationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}

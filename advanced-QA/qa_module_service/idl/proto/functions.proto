@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+
+service FunctionService {
+  rpc question_to_query(QuestionToQueryReq) returns (QuestionToQueryReply);
+  rpc context_question_to_query(ContextQuestionToQueryReq) returns (ContextQuestionToQueryReply);
+  rpc context_question_to_answer(ContextQuestionToAnswerReq) returns (ContextQuestionToAnswerReply);
+  rpc rerank(RerankReq) returns (RerankReply);
+  rpc retrieval1(Retrieval1Req) returns (Retrieval1Reply);
+  rpc retrieval2(Retrieval2Req) returns (Retrieval2Reply);
+  rpc qa_evaluation(QaEvaluationReq) returns (QaEvaluationReply);
+}
+
+message QuestionToQueryReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message QuestionToQueryReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message Retrieval1Req {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message Retrieval1Reply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message Retrieval2Req {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message Retrieval2Reply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message ContextQuestionToQueryReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ContextQuestionToQueryReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ContextQuestionToAnswerReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message ContextQuestionToAnswerReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message RerankReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message RerankReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+message QaEvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message QaEvaluationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
+
+

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+option go_package = "github.com/JiaYuan-bot/chess_function_service/idl";
+
+service FunctionService {
+  rpc candidate_generation(CandidateGenerationReq) returns (CandidateGenerationReply);
+  rpc column_filtering(ColumnFilteringReq) returns (ColumnFilteringReply);
+  rpc column_selection(ColumnSelectionReq) returns (ColumnSelectionReply);
+  rpc context_retrieval(ContextRetrievalReq) returns (ContextRetrievalReply);
+  rpc entity_retrieval(EntityRetrievalReq) returns (EntityRetrievalReply);
+  rpc evaluation(EvaluationReq) returns (EvaluationReply);
+  rpc keyword_extraction(KeywordExtractionReq) returns (KeywordExtractionReply);
+  rpc revision(RevisionReq) returns (RevisionReply);
+  rpc table_selection(TableSelectionReq) returns (TableSelectionReply);
+}
+
+message CandidateGenerationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+message CandidateGenerationReply{
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ColumnFilteringReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ColumnFilteringReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ColumnSelectionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ColumnSelectionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message ContextRetrievalReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message ContextRetrievalReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message EntityRetrievalReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message EntityRetrievalReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message EvaluationReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message EvaluationReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message KeywordExtractionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message KeywordExtractionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message RevisionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message RevisionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+message TableSelectionReq {
+  // JSON-encoded dictionary parameters
+  string params_json = 1;
+}
+
+message TableSelectionReply {
+  // JSON-encoded dictionary
+  string result_json = 1;
+  string error = 2;
+}
+
+
