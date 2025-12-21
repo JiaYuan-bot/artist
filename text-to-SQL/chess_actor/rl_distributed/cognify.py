@@ -13,7 +13,7 @@ import asyncio
 import logging
 from dataclasses import dataclass
 
-from workflow_controller.graph import WorkflowGraph, create_workflow_from_config
+from workflow_controller.graph import WorkflowGraph
 from workflow_controller.workflow_executor import WorkflowExecutor, FunctionServiceClient
 from app.task import Task
 from pathlib import Path

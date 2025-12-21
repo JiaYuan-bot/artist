@@ -631,15 +631,13 @@ def load_dataset(path):
 
 async def main():
     # Example usage
-    from workflow_controller.graph import create_example_nvagent_workflow_default
+    from workflow_controller.graph import create_example_nl2sql_workflow_default
 
     # Create workflow and dataset
-    graph = create_example_nvagent_workflow_default()
+    graph = create_example_nl2sql_workflow_default()
 
     dataset = load_dataset(
         "/home/jiayuan/nl2sql/chess_function_service/data/dev/dev.json")
-
-    # dataset = dataset[0:1]
 
     manager = ActorManager(learner_address="localhost:50204")
 
