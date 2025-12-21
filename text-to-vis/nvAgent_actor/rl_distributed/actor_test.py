@@ -11,7 +11,6 @@ from workflow_controller.workflow_executor import WorkflowExecutor, FunctionServ
 from rl_distributed.rl import DQN, StateEncoder
 from rl_distributed.rl import NODE_COSTS, MAX_NODE_COSTS
 from nvagent.dataset import Dataset
-from result.test_set_llm.build_routing import build_routing_from_configuration
 
 
 # Actor class with RPC communication

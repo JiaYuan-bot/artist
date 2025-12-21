@@ -17,10 +17,10 @@ if __name__ == "__main__":
 
     torch.autograd.set_detect_anomaly(True)
     # Example usage
-    from workflow_controller.graph import create_example_nvagent_workflow_default
+    from workflow_controller.graph import create_example_nl2sql_workflow_default
 
     # Create workflow and dataset
-    graph = create_example_nvagent_workflow_default()
+    graph = create_example_nl2sql_workflow_default()
     run_learner(workflow_graph=graph, device='cuda')
 
 # if __name__ == "__main__":

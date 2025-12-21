@@ -2,7 +2,7 @@ import logging
 from typing import Dict, Any
 
 from llm.utils import get_prompt_engine_parser
-from llm.models import async_llm_chain_call, llm_chain
+from llm.models import async_llm_chain_call, get_llm_chain
 
 from .utils import node_decorator
 

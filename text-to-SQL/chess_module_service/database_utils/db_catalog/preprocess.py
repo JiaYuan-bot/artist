@@ -11,7 +11,6 @@ from database_utils.db_catalog.csv_utils import load_tables_description
 load_dotenv(override=True)
 
 EMBEDDING_FUNCTION = VertexAIEmbeddings(model_name="gemini-embedding-001")
-# EMBEDDING_FUNCTION = VertexAIEmbeddings(model_name="text-embedding-004")
 
 
 def make_db_context_vec_db(db_directory_path: str, **kwargs) -> None:

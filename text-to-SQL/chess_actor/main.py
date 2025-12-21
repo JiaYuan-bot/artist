@@ -5,7 +5,7 @@ from workflow_controller.workflow_executor import WorkflowExecutor, FunctionServ
 # from rl_distributed.actor_model_free import main
 from rl_distributed.actor_model_sync import main
 # from rl_distributed.actor_sync_without_plm import main
-from rl_distributed.actor_test import test_chess, encoder_test
+from rl_distributed.actor_test import test_chess
 from rl_distributed.cognify import run_cognify
 
 from app.task import Task
@@ -20,4 +20,4 @@ if __name__ == "__main__":
     # run_cognify()
     # test_chess()
     # Start the single event loop to run everything
-    asyncio.run(test_chess())
+    asyncio.run(main())

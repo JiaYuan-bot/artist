@@ -16,7 +16,6 @@ from workflow_controller.graph import WorkflowGraph
 from workflow_controller.workflow_executor import WorkflowExecutor, FunctionServiceClient
 from rl_distributed.rl import DQN, StateEncoder, Experience, ExperienceBatch
 from rl_distributed.rl import NODE_COSTS, MAX_NODE_COSTS
-from result.test_set_llm.build_routing import build_routing_from_configuration
 
 # Import generated protobuf modules
 from idl.python import actor_learner_pb2, actor_learner_pb2_grpc
@@ -300,7 +299,7 @@ async def test_chess():
     from workflow_controller.graph import create_example_nvagent_workflow_default
 
     # Create workflow and dataset
-    graph = create_example_nvagent_workflow_default()
+    graph = create_example_nl2sql_workflow_default()
 
     dataset = load_dataset(
         "/home/jiayuan/nl2sql/chess_function_service/data/dev/dev.json")

@@ -279,76 +279,165 @@ class WorkflowGraph:
         return graph
 
 
-# Example: Building a text-to-vis workflow
-def create_example_nvagent_workflow_default() -> WorkflowGraph:
+# Example: Building a text-to-SQL workflow
+def create_example_nl2sql_workflow_default() -> WorkflowGraph:
     """Create an example workflow for text-to-SQL"""
     graph = WorkflowGraph()
 
-    preprocess = Node(id="preprocess",
-                      name="Preprocess",
-                      node_type=NodeType.CODE_EXECUTION,
-                      function_name=FunctionName.PREPROCESS,
-                      config=NodeConfig())
+    keyword_extraction_large = Node(
+        id="keyword_extraction_large",
+        name="Keyword Extraction (Large)",
+        node_type=NodeType.LLM_CALL,
+        function_name=FunctionName.KEYWORD_EXTRACTION,
+        config=NodeConfig(model="gemini-2.5-pro",
+                          temperature=0.0,
+                          template_name="keyword_extraction"))
 
-    processor_large = Node(id="preprocess",
-                           name="Preprocess",
-                           node_type=NodeType.LLM_CALL,
-                           function_name=FunctionName.PROCESSOR,
-                           config=NodeConfig(model="gemini-2.5-pro"))
+    entity_retrieval_small = Node(
+        id="entity_retrieval_small",
+        name="Entity Retrieval (Small)",
+        node_type=NodeType.DATA_RETRIEVAL,
+        function_name=FunctionName.ENTITY_RETRIEVAL,
+        config=NodeConfig(template_name="entity_retrieval"))
 
-    composor_large = Node(id="composor_large",
-                          name="Composor (Large)",
+    context_retrieval_small = Node(
+        id="context_retrieval_small",
+        name="Context Retrieval (Small)",
+        node_type=NodeType.DATA_RETRIEVAL,
+        function_name=FunctionName.CONTEXT_RETRIEVAL,
+        config=NodeConfig(template_name="context_retrieval",
+                          custom_params={
+                              "top_k": 5,
+                          }))
+
+    column_filter_large = Node(id="column_filter_large",
+                               name="Column Filter (Large)",
+                               node_type=NodeType.LLM_CALL,
+                               function_name=FunctionName.COLUMN_FILTERING,
+                               config=NodeConfig(
+                                   model="gemini-2.5-pro",
+                                   temperature=0.0,
+                                   template_name="column_filtering"))
+
+    # Column filtering variants
+    table_selection_large = Node(id="table_selection_large",
+                                 name="Table Selection (Large)",
+                                 node_type=NodeType.LLM_CALL,
+                                 function_name=FunctionName.TABLE_SELECTION,
+                                 config=NodeConfig(
+                                     model="gemini-2.5-pro",
+                                     temperature=0.0,
+                                     template_name="table_selection",
+                                     custom_params={
+                                         "sampling_count": 1,
+                                         "mode": "ask_model"
+                                     }))
+
+    # Column selection variants
+    column_selection_large = Node(id="column_selection_large",
+                                  name="Column Selection (Large)",
+                                  node_type=NodeType.LLM_CALL,
+                                  function_name=FunctionName.COLUMN_SELECTION,
+                                  config=NodeConfig(
+                                      model="gemini-2.5-pro",
+                                      temperature=0.0,
+                                      template_name="column_selection",
+                                      custom_params={
+                                          "mode": "ask_model",
+                                          "sampling_count": 1,
+                                      }))
+
+    candidate_gen_large_dc = Node(
+        id="candidate_gen_large_dc",
+        name="Candidate Gen (Large_DC)",
+        node_type=NodeType.LLM_CALL,
+        function_name=FunctionName.CANDIDATE_GENERATION,
+        config=NodeConfig(model="gemini-2.5-pro",
+                          temperature=0.0,
+                          template_name="dc_candidate_generation",
+                          parser_name="generate_candidate_gemini_markdown_cot",
+                          custom_params={
+                              "sampling_count": 1,
+                          }))
+
+    revision_large = Node(id="revision_large",
+                          name="Revision (Large)",
                           node_type=NodeType.LLM_CALL,
-                          function_name=FunctionName.COMPOSOR,
-                          config=NodeConfig(
-                              model="gemini-2.5-pro",
-                              template_name="advanced_composer_template",
-                          ))
+                          function_name=FunctionName.REVISION,
+                          config=NodeConfig(model="gemini-2.5-pro",
+                                            temperature=0.0,
+                                            template_name="revision",
+                                            custom_params={
+                                                "sampling_count": 1,
+                                            }))
 
-    validator_large = Node(id="validator_large",
-                           name="Validator_large (Large)",
-                           node_type=NodeType.LLM_CALL,
-                           function_name=FunctionName.VALIDATOR,
-                           config=NodeConfig(model="gemini-2.5-pro"))
-
-    nv_evaluation = Node(id="nv_evaluation",
-                         name="nv_evaluation",
-                         node_type=NodeType.LLM_CALL,
-                         function_name=FunctionName.NVEVALUATION,
-                         config=NodeConfig())
+    # evaluation node
+    evaluation = Node(id="evaluation",
+                      name="evaluation",
+                      node_type=NodeType.TOOL_CALL,
+                      function_name=FunctionName.EVALUATION,
+                      config=NodeConfig(model="gemini-2.5-pro",
+                                        temperature=0.0,
+                                        template_name="evaluation",
+                                        custom_params={
+                                            "sampling_count": 1,
+                                        }))
 
     # Add all nodes
     for node in [
-            preprocess, processor_large, composor_large, validator_large,
-            nv_evaluation
+            keyword_extraction_large, entity_retrieval_small,
+            context_retrieval_small, column_filter_large,
+            table_selection_large, column_selection_large,
+            candidate_gen_large_dc, revision_large, evaluation
     ]:
         graph.add_node(node)
 
     # Connect START to entry nodes
-    graph.add_edge(Edge("START", "preprocess", weight=0.5))
+    for ke in ["keyword_extraction_large"]:
+        graph.add_edge(Edge("START", ke, weight=0.5))
 
-    # Connect preprocess to processor
-    for pro in ["processor_large"]:
-        graph.add_edge(Edge(preprocess, pro, weight=0.5))
+        # Connect keyword extraction to entity retrieval
+        graph.add_edge(Edge(ke, "entity_retrieval_small", weight=0.5))
 
-    # Connect processor to composor
-    graph.add_edge(Edge("processor_large", "composor", weight=0.5))
+    # Connect entity retrieval to context retrieval
+    graph.add_edge(
+        Edge("entity_retrieval_small", "context_retrieval_small", weight=0.5))
 
-    # Connect composor to validator
-    graph.add_edge(Edge("composor", "validator", weight=0.5))
+    # Connect context retrieval to column filtering
+    graph.add_edge(
+        Edge("context_retrieval_small", "column_filter_large", weight=0.5))
 
-    # Connect validator to nv_evaluation
-    graph.add_edge(Edge("validator", "nv_evaluation", weight=0.5))
+    # Connect column filtering to table selection
+    graph.add_edge(
+        Edge("column_filter_large", "table_selection_large", weight=0.5))
 
-    # Connect nv_evaluation to END
-    graph.add_edge(Edge("nv_evaluation", "END", weight=1.0))
+    # Connect table selection to column selection
+    graph.add_edge(
+        Edge("table_selection_large", "column_selection_large", weight=0.5))
+
+    # Connect column selection to candidate generation
+    for cs in ["column_selection_large"]:
+        for cg in ["candidate_gen_large_dc"]:
+            graph.add_edge(Edge(cs, cg, weight=1.0))
+
+    # Connect candidate generation to revision
+    for cg in ["candidate_gen_large_dc"]:
+        for rev in ["revision_large"]:
+            graph.add_edge(Edge(cg, rev, weight=1.0))
+
+    # Connect revision to evaluation
+    for rev in ["revision_large"]:
+        graph.add_edge(Edge(rev, "evaluation", weight=1.0))
+
+    # Connect validation to END
+    graph.add_edge(Edge("evaluation", "END", weight=1.0))
 
     return graph
 
 
 if __name__ == "__main__":
     # Example usage
-    example_graph = create_example_nvagent_workflow_default()
+    example_graph = create_example_nl2sql_workflow_default()
     example_graph.visualize("./")
     print("All paths from START to END:")
     paths = example_graph.get_all_paths()
