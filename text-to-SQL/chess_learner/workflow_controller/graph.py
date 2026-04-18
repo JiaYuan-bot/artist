@@ -407,6 +407,10 @@ def create_example_nl2sql_workflow_default() -> WorkflowGraph:
     graph.add_edge(
         Edge("context_retrieval_small", "column_filter_large", weight=0.5))
 
+    # Shortcut: skip context_retrieval_small
+    graph.add_edge(
+        Edge("entity_retrieval_small", "column_filter_large", weight=0.5))
+
     # Connect column filtering to table selection
     graph.add_edge(
         Edge("column_filter_large", "table_selection_large", weight=0.5))

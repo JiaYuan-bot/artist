@@ -266,6 +266,9 @@ class Actor:
         self.episodes_completed = 0
         self.last_model_update = 0
 
+        # Early plan exit: tracks best successful plan latency per query
+        self.best_latency: Dict[int, float] = {}
+
     async def initialize(self):
         """Initialize RPC connection and register with learner"""
         try:
@@ -387,6 +390,7 @@ class Actor:
         """Collect experience from a single episode"""
         episode_trajectory_raw = []
         success = True
+        early_exited = False
         tracer = self.workflow_executor.tracer
         state = tracer.start_execution(task=task,
                                        session_id=f"actor_{self.actor_id}")
@@ -394,6 +398,15 @@ class Actor:
         current_state_rl = tracer.current_state.to_rl_state()
 
         while not tracer.is_execution_complete():
+            # Early plan exit: prune if elapsed time already exceeds best known latency
+            t_elapsed = tracer.current_state.total_execution_time
+            if task.id in self.best_latency and t_elapsed > self.best_latency[task.id]:
+                logging.info(
+                    f"Early plan exit for task {task.id}: "
+                    f"t_elapsed={t_elapsed:.2f}s > best={self.best_latency[task.id]:.2f}s")
+                early_exited = True
+                break
+
             prev_state_rl = current_state_rl
             available_actions = tracer.get_available_actions()
             if not available_actions:
@@ -417,7 +430,7 @@ class Actor:
                 break
             current_state_rl = tracer.current_state.to_rl_state()
 
-        if not success:
+        if not success or early_exited:
             return []
 
         # # Process trajectory into experiences
@@ -486,6 +499,12 @@ class Actor:
             node_exec_time = tracer.current_state.execution_history[
                 i].execution_time
             nodes_exec_time.append(f"{path[i]}({node_exec_time:.2f}s)")
+        # Early plan exit: update best latency for successful episodes (f1 == 1.0)
+        if f1_score == 1.0:
+            total_latency = tracer.current_state.total_execution_time
+            prev_best = self.best_latency.get(task.id, float('inf'))
+            self.best_latency[task.id] = min(prev_best, total_latency)
+
         logging.info(
             f"Task Id: {task.id} Path length: {len(path)}, "
             f"Execution Time: {tracer.current_state.total_execution_time:.2f}s, "

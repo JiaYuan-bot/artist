@@ -266,6 +266,9 @@ class Actor:
         self.episodes_completed = 0
         self.last_model_update = 0
 
+        # Early plan exit: tracks best successful plan latency per query
+        self.best_latency: Dict[int, float] = {}
+
     async def initialize(self):
         """Initialize RPC connection and register with learner"""
         try:
@@ -375,6 +378,7 @@ class Actor:
         """Collect experience from a single episode"""
         episode_trajectory_raw = []
         success = True
+        early_exited = False
         tracer = self.workflow_executor.tracer
         state = tracer.start_execution(task=task,
                                        session_id=f"actor_{self.actor_id}")
@@ -382,6 +386,15 @@ class Actor:
         current_state_rl = tracer.current_state.to_rl_state()
 
         while not tracer.is_execution_complete():
+            # Early plan exit: prune if elapsed time already exceeds best known latency
+            t_elapsed = tracer.current_state.total_execution_time
+            if task.question_id in self.best_latency and t_elapsed > self.best_latency[task.question_id]:
+                logging.info(
+                    f"Early plan exit for task {task.question_id}: "
+                    f"t_elapsed={t_elapsed:.2f}s > best={self.best_latency[task.question_id]:.2f}s")
+                early_exited = True
+                break
+
             prev_state_rl = current_state_rl
             available_actions = tracer.get_available_actions()
             if not available_actions:
@@ -405,7 +418,7 @@ class Actor:
                 break
             current_state_rl = tracer.current_state.to_rl_state()
 
-        if not success:
+        if not success or early_exited:
             return []
 
         # Process trajectory into experiences
@@ -474,6 +487,13 @@ class Actor:
                 i].execution_time
             nodes_exec_time.append(f"{path[i]}({node_exec_time:.2f}s)")
         metrics = tracer.calculate_execution_metrics()
+
+        # Early plan exit: update best latency for successful episodes
+        if overall_episode_successful:
+            total_latency = metrics['total_time']
+            prev_best = self.best_latency.get(task.question_id, float('inf'))
+            self.best_latency[task.question_id] = min(prev_best, total_latency)
+
         logging.info(f"Task Id: {task.question_id} Path length: {len(path)}, "
                      f"Execution Time: {metrics['total_time']:.2f}s, "
                      f"Executed Nodes: {nodes_exec_time}\n"
